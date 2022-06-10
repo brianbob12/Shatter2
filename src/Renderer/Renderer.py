@@ -4,7 +4,7 @@ from numpy import ndarray,exp
 import pygame
 import sys
 from .Colors import *
-from Engine import Lattice
+from Engine import Lattice, PointMass
 
 class Renderer:
   def __init__(self,width:int,height:int):
@@ -17,7 +17,7 @@ class Renderer:
     self.screen=pygame.display.set_mode((width,height))
     self.lattices:List[Lattice]=[]
 
-    self.pointRadius=5
+    self.pointRadius=3
     self.connectionThickness=1
 
     self.dragSpeed:float=1
@@ -42,13 +42,7 @@ class Renderer:
     return round(x),round(y)
 
   def drawLattice(self,lattice:Lattice,color:Tuple[int,int,int]):
-    for pointMass in lattice.points.values():
-      position=self.getPixelLocation(lattice.getAbsolutePosition(pointMass.relativePos))
-      try:
-        pygame.draw.circle(self.screen,color,position,self.pointRadius)
-      except TypeError as e:
-        #numbers are too big
-        pass
+    
     for connection in lattice.connections.values():
       end1=self.getPixelLocation(lattice.getAbsolutePosition(connection.p1.relativePos))
       end2=self.getPixelLocation(lattice.getAbsolutePosition(connection.p2.relativePos)) 
@@ -61,10 +55,28 @@ class Renderer:
         else:
           tensile=v
         c=(255-tensile,255-compressive-tensile,255-compressive)
-        pygame.draw.line(self.screen,c,end1,end2,width=self.connectionThickness)
+        try:
+          pygame.draw.line(self.screen,c,end1,end2,width=self.connectionThickness)
+        except ValueError as e:
+          print(e)
+          print(v)
       except TypeError as e:
         #numbers are too big
         pass
+    
+    for pointMass in lattice.points.values():
+      self.drawPoint(pointMass,lattice,color)
+
+  def drawPoint(self,point:PointMass,lattice:Lattice,color:Tuple[int,int,int]):
+    position=self.getPixelLocation(lattice.getAbsolutePosition(point.relativePos))
+    try:
+      pygame.draw.circle(self.screen,color,position,self.pointRadius)
+    except TypeError as e:
+      #numbers are too big
+      pass
+
+  def update(self):
+    pygame.display.update()
     
   def loop(self):
     for event in pygame.event.get():

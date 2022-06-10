@@ -7,7 +7,7 @@ class SGDengine:
 
   #solves f(x)=0
   @staticmethod
-  def solve(f:Callable[[Tensor],Tensor],startingX:Any,learningRate:float,iterations:int)->Any:
+  def solve(f:Callable[[Tensor],Tensor],startingX:Any,learningRate:float,iterations:int,acceptableError:float)->Any:
     x=Variable(startingX)
     optimizer:Optimizer=Adam(learningRate)
     for i in range(iterations):
@@ -16,6 +16,9 @@ class SGDengine:
         error=math.reduce_mean(math.abs(f(x)))
         grads=g.gradient(error,[x])
       optimizer.apply_gradients(zip(grads,[x])) 
+      if error<acceptableError:
+        print(error)
+        return x
     print(error)
     return x
     

@@ -151,7 +151,7 @@ class Lattice:
       calculatedVelocities:Tensor=tfMatmul(pointConnectionsMatrix,connectionImpulsesWithDirection) + netExternalPointImpulsesTimesMass
       return pointVelocityDeltas - calculatedVelocities  # type: ignore
 
-    connectionImpulses=SGDengine.solve(f,connectionImpulses,0.1,150)
+    connectionImpulses=SGDengine.solve(f,connectionImpulses,0.1,150,0.1)
 
 
     out:Dict[Connection,float]={} 
