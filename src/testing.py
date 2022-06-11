@@ -15,18 +15,23 @@ chosen=0
 
 myRenderer.loop()
 
-myLattice.startNewFrame()
-myLattice.addImpulse(edgePoints[chosen],np.asfarray([-100,0]))
-myLattice.resolveFrame(1)
+#myLattice.startNewFrame()
+#myLattice.addImpulse(edgePoints[chosen],np.asfarray([-100,0]))
+#myLattice.resolveFrame(1)
+
+myLattice.angularVelocity=2
 
 t=time.time()
-timeMultiplier=0.2
+timeMultiplier=0.001
+i=0
 while True:
   myLattice.startNewFrame()
-  myLattice.addImpulse(edgePoints[chosen],np.asfarray([-10,0]))
+  #myLattice.addImpulse(edgePoints[chosen],np.asfarray([-10,0]))
   myLattice.resolveFrame((time.time()-t)*timeMultiplier)
   t=time.time()
   myRenderer.loop()
-  myRenderer.drawPoint(edgePoints[chosen],myLattice,(255,0,255))
-  myRenderer.update()
+  myRenderer.saveFrame(f"tests/A1/{i:04d}.png")
+  #myRenderer.drawPoint(edgePoints[chosen],myLattice,(255,0,255))
+  #myRenderer.update()
+  i+=1
   

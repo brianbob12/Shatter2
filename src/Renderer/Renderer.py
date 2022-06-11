@@ -118,3 +118,6 @@ class Renderer:
     if self.mouseDown:
       self.xOffset=oldXOffset
       self.yOffset=oldYOffset
+
+  def saveFrame(self,fileName:str):
+    pygame.image.save(self.screen,fileName)

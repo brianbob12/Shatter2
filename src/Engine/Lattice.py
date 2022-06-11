@@ -114,7 +114,9 @@ class Lattice:
     self.connectionStresses=self.solveConnectionImpulses(velocityDifferences)
 
   def solveConnectionImpulses(self,velocityDifferences:Dict[PointMass,ndarray])->Dict[Connection,float]:
+    #everything should be in absolute space
     pointConnectionsMatrix:ndarray=zeros(shape=[len(self.points),len(self.connections)])
+    #absolute velocity deltas
     pointVelocityDeltas:ndarray=zeros(shape=[len(self.points),2])
     connectionDirectionMatrix:ndarray=zeros(shape=[len(self.connections),2])#x ands y
     netExternalPointImpulsesTimesMass:ndarray=zeros(shape=[len(self.points),2])
@@ -129,7 +131,7 @@ class Lattice:
       #indicates the force acts in the opposite direction
       pointConnectionsMatrix[list(self.points.keys()).index(connection.p2.ID)][connectionIndex]=-1/connection.p2.mass
 
-      directionVector:ndarray=connection.getHeading()
+      directionVector:ndarray=array(dot(self.rotationMatrix,connection.getHeading()))
       distance:float=sqrt(directionVector.dot(directionVector))
       connectionDirectionMatrix[connectionIndex]=directionVector/distance
     
