@@ -10,6 +10,7 @@ class Connection:
   p2:PointMass
   breakingImpulse:float
 
+  #relative heading
   def getHeading(self)->ndarray:
     out =self.p1.relativePos-self.p2.relativePos
     #sqrt(v.dot(v)) is the fastest way to find the abs of a vector https://stackoverflow.com/questions/9171158/how-do-you-get-the-magnitude-of-a-vector-in-numpy

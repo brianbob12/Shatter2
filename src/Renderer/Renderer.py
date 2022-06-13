@@ -1,4 +1,3 @@
-from turtle import position
 from typing import List
 from numpy import ndarray,exp
 import pygame
@@ -17,7 +16,7 @@ class Renderer:
     self.screen=pygame.display.set_mode((width,height))
     self.lattices:List[Lattice]=[]
 
-    self.pointRadius=3
+    self.pointRadius=2
     self.connectionThickness=1
 
     self.dragSpeed:float=1
@@ -41,8 +40,7 @@ class Renderer:
     y+=self.height/2+self.yOffset
     return round(x),round(y)
 
-  def drawLattice(self,lattice:Lattice,color:Tuple[int,int,int]):
-    
+  def drawLattice(self,lattice:Lattice,color:Tuple[int,int,int],drawOutline=False):
     for connection in lattice.connections.values():
       end1=self.getPixelLocation(lattice.getAbsolutePosition(connection.p1.relativePos))
       end2=self.getPixelLocation(lattice.getAbsolutePosition(connection.p2.relativePos)) 
@@ -55,12 +53,19 @@ class Renderer:
         else:
           tensile=v
         c=(255-tensile,255-compressive-tensile,255-compressive)
+        thickness=self.connectionThickness
+        if drawOutline:
+          if connection in lattice.getSurfaceConnections():
+            c=(255,0,255)
+            thickness*=4
         try:
-          pygame.draw.line(self.screen,c,end1,end2,width=self.connectionThickness)
+          pygame.draw.line(self.screen,c,end1,end2,width=thickness)
         except ValueError as e:
           print(e)
           print(v)
       except TypeError as e:
+        raise(e)
+        print(e)
         #numbers are too big
         pass
     
