@@ -40,7 +40,7 @@ class Renderer:
     y+=self.height/2+self.yOffset
     return round(x),round(y)
 
-  def drawLattice(self,lattice:Lattice,color:Tuple[int,int,int],drawOutline=False):
+  def drawLattice(self,lattice:Lattice,color:Tuple[int,int,int],drawOutline=True):
     for connection in lattice.connections.values():
       end1=self.getPixelLocation(lattice.getAbsolutePosition(connection.p1.relativePos))
       end2=self.getPixelLocation(lattice.getAbsolutePosition(connection.p2.relativePos)) 

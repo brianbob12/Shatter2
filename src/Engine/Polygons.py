@@ -16,7 +16,7 @@ def addPoint(px:float,py:float,pointDict:Dict[str,List[PointMass]],lat:Lattice,m
   pointDict[getKey(px,py,connectionRadius)].append(point)
   return point
 
-def rect(
+def randomRect(
   x:float,
   y:float,
   height:float,
@@ -88,6 +88,70 @@ def rect(
             lat.connect(point,otherPoint,connectionStrength)
 
   return lat,edgePoints
+
+def regularRect(
+  x:float,
+  y:float,
+  height:float,
+  width:float,
+  mass:float,
+  pointDensity:float,
+  connectionStrength:float
+  )->Tuple[Lattice,List[PointMass]]:
+
+
+  lat=Lattice(asfarray([x,y]))
+
+  area=height*width
+  sqrtpd=pointDensity**0.5
+  massPerPoint=mass/(int(height*sqrtpd)*int(width*sqrtpd))
+
+  points:Dict[str,List[PointMass]]={}
+  edgePoints=[]
+  
+  connectionRadius=1.1/sqrtpd
+
+  # add perimeter
+  for i in range(int(height*sqrtpd)):
+    py=-height/2 + i/sqrtpd 
+    for j in range(int(width*sqrtpd)):
+      px=-width/2 + j/sqrtpd
+      point=addPoint(px+x,py+y,points,lat,massPerPoint,connectionRadius)
+      if i==0 or i==int(height*sqrtpd)-1 or j==0 or j==int(width*sqrtpd):
+        edgePoints.append(point)
+
+  # add connections
+  requiredSquaredDistance=connectionRadius**2
+  for key in points.keys():
+    sk=key.split(":")
+    rx=int(sk[0])
+    ry=int(sk[1])
+    neighboringRegions=[]
+    for i in range(-2,2,1):
+      for j in range(-2,2,1):
+        k=str(rx+i)+":"+str(ry+j)
+        if k in points.keys():
+          neighboringRegions.append(k)
+
+    for point in points[key]:
+      for regionKey in neighboringRegions:
+        for otherPoint in points[regionKey]:
+          if point.ID==otherPoint.ID:
+            continue 
+          #to avoid doubling up connections only connect points with higher IDs as p1
+          if point.ID<otherPoint.ID:
+            continue
+          delta=point.relativePos-otherPoint.relativePos
+          distanceSquared=delta.dot(delta)
+          if distanceSquared<requiredSquaredDistance:
+            lat.connect(point,otherPoint,connectionStrength)
+
+  return lat,edgePoints
+
+
+def shellRect():
+  pass
+
 
 def circle(
   x:float,
