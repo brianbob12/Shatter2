@@ -18,5 +18,6 @@ class SGDengine:
       optimizer.apply_gradients(zip(grads,[x])) 
       if error<acceptableError:
         return x
+    print(error)
     return x
     

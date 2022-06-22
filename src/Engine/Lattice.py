@@ -234,6 +234,12 @@ class Lattice:
     self.rotate(self.angularVelocity*deltaT)
     
   def computeSurfaceConnections(self)->List[Connection]:
+    #checks
+    if len(self.connections)<3:
+      raise(Exception("Not Enough connections"))
+    if not self.surfaceRootNode in self.pointConnectionMap.keys():
+      raise(Exception("Surface root node not connected to lattice."))
+
     if self.surfaceRootNode==None:
       #not enough points
       self.surfaceConnections=[]
@@ -242,7 +248,7 @@ class Lattice:
     #clockwise turn
     def angleBetween(p1:ndarray,p2:ndarray,p3:ndarray)->float:
       va=p1-p2
-      vb=p2-p3
+      vb=--p2+p3
       angle=atan2(va[0],va[1])-atan2(vb[0],vb[1])
       if angle<0:
         angle+=2*pi

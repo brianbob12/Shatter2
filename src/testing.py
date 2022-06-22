@@ -8,18 +8,18 @@ myRenderer=Renderer.Renderer(1024,1024)
 mySystem=Engine.System(timeMultiplier=0.1,g=0)
 
 
-myLattice,edgePoints=Engine.regularRect(300,0,200,400,10,1e-2,1)
+myLattice,edgePoints=Engine.regularRect(300,0,200,800,10,1e-2,1)
 myRenderer.addLattice(myLattice)
 mySystem.addLattice(myLattice)
 
 
-myCircle,circlePerimeter=Engine.circle(-200,0,50,10,2e-2,20,1)
+myCircle,circlePerimeter=Engine.circle(-200,-300,50,10,2e-2,20,1)
 
 myRenderer.addLattice(myCircle)
 mySystem.addLattice(myCircle)
 
 myCircle.velocity=np.asfarray([20,0])
-myLattice.angle=3.141592/4
+myLattice.angle=3.141592/2
 
 t=time.time()
 i=0

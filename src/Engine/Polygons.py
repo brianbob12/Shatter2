@@ -96,7 +96,8 @@ def regularRect(
   width:float,
   mass:float,
   pointDensity:float,
-  connectionStrength:float
+  connectionStrength:float,
+  stddev:float=0
   )->Tuple[Lattice,List[PointMass]]:
 
 
@@ -113,9 +114,9 @@ def regularRect(
 
   # add perimeter
   for i in range(int(height*sqrtpd)):
-    py=-height/2 + i/sqrtpd 
+    py=-height/2 + i/sqrtpd +random.normalvariate(0,stddev)
     for j in range(int(width*sqrtpd)):
-      px=-width/2 + j/sqrtpd
+      px=-width/2 + j/sqrtpd +random.normalvariate(0,stddev)
       point=addPoint(px+x,py+y,points,lat,massPerPoint,connectionRadius)
       if i==0 or i==int(height*sqrtpd)-1 or j==0 or j==int(width*sqrtpd):
         edgePoints.append(point)
